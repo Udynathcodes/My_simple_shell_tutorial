@@ -2,11 +2,19 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/wait.h>
+#include <sys/types.h>
 
 int main(int argc, char **argv)
 {
 	int id = fork();
 	int n;
+	
+	if (id == -1)
+	{
+		perror("fork failed\n");
+		return -1;
+	}
 
 	if ( id == 0)
 	{
@@ -18,16 +26,14 @@ int main(int argc, char **argv)
 	}
 	if (id != 0)
 	{
-		wait();
+		wait(NULL);
 	}
 	for (int i = n; i <= n + 5; i++)
 	{
 		printf("%d", i);
 		fflush(stdout);
 	}
-	if (id != 0)
-	{
-		printf("\n");
-	}
+	printf("\n");
+
 	return (0);
 }
